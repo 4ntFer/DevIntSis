@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 
 public class Image {
     private int width;
@@ -26,16 +27,12 @@ public class Image {
 
         for(int x = 0 ; x < width ; x++){
             for(int y = 0 ; y < height ;  y++){
-                float alpha = (float)matrix.get(x,y);
-
-                if(alpha < 0)
-                    alpha *= -1;
+                BigDecimal alpha = new BigDecimal(matrix.get(x,y));
+                alpha = alpha.abs();
 
                 buffImg.setRGB(y,x, Color.HSBtoRGB(0,
                         0,
-                        alpha));
-
-                System.out.println(alpha);
+                        (float)alpha.doubleValue()));
             }
         }
 
