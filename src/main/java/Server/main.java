@@ -1,20 +1,30 @@
 package Server;
 
-import ProcessImg.Algorithms.CGNE;
-import ProcessImg.Algorithms.CGNR;
-import ProcessImg.Image;
-import com.opencsv.exceptions.CsvException;
-import org.jblas.DoubleMatrix;
+import com.sun.management.OperatingSystemMXBean;
 
 import java.io.IOException;
-
-import static utils.Data.getMatrixData;
-import static utils.Data.getVectorData;
+import java.lang.management.ManagementFactory;
+import java.net.ServerSocket;
 
 public class main {
     public static void main(String args[]){
+        ServerSocket serverSocket;
+        OperatingSystemMXBean osMXBean = ManagementFactory.getPlatformMXBean(OperatingSystemMXBean.class);
+
         try {
-            DoubleMatrix H = new DoubleMatrix(getMatrixData("src/Server.main/res/test1/H-1.csv"));
+            serverSocket = new ServerSocket(4242);
+
+            while(true){
+                //TODO: Gerenciamento de recursos da máquina
+
+                new HandlerClient(serverSocket.accept(), osMXBean);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        /*try {
+            DoubleMatrix H = new DoubleMatrix(getMatrixData("src/Server.main/res/test1/H1.csv"));
             DoubleMatrix g = new DoubleMatrix(getVectorData("src/Server.main/res/test1/G-1.csv"));
             DoubleMatrix f;
 
@@ -27,6 +37,6 @@ public class main {
             throw new RuntimeException(e);
         } catch (CsvException e) {
             throw new RuntimeException(e);
-        }
+        }*/
     }
 }

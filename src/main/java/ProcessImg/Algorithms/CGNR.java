@@ -2,12 +2,13 @@ package ProcessImg.Algorithms;
 
 import org.jblas.DoubleMatrix;
 
+import java.math.BigDecimal;
+
 public class CGNR extends CGALG {
 
-    public static DoubleMatrix getImage(DoubleMatrix H, DoubleMatrix g) {
+    public static int algorithm(DoubleMatrix H, DoubleMatrix g, DoubleMatrix result){
+        int numberIteractions = 0;
         System.out.println("Executing CGNR!");
-
-        System.out.println("H is " + H.rows + " x " + H.columns + " and g is " + g.columns);
         DoubleMatrix f = DoubleMatrix.zeros(H.columns);
         DoubleMatrix r = g.sub(H.mmul(f));
 
@@ -45,16 +46,21 @@ public class CGNR extends CGALG {
 
             error = error(newR, r);
 
+            // Valor absoluto do erro
+            if(error < 0){
+                error *= -1;
+            }
+
             f = newF;
             r = newR;
             z = newZ;
             p = newP;
+            numberIteractions++;
         }while (error > 1e-4);
 
-        f.reshape(60, 60);
-
-
+        result.copy(f);
         System.out.println("CGNR Finalized!");
-        return f;
+        return numberIteractions;
     }
+
 }

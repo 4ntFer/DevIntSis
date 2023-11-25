@@ -6,6 +6,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -13,17 +14,14 @@ import java.math.BigDecimal;
 public class Image {
     private int width;
     private int height;
-    private DoubleMatrix matrix;
 
-    public Image(DoubleMatrix f){
-        width = f.columns;
-        height = f.rows;
-        matrix = f;
+    BufferedImage buffImg;
 
-    }
+    public Image(DoubleMatrix matrix){
+        width = matrix.columns;
+        height = matrix.rows;
 
-    public void saveImage() throws IOException {
-        BufferedImage buffImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        buffImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
         for(int x = 0 ; x < width ; x++){
             for(int y = 0 ; y < height ;  y++){
@@ -35,7 +33,15 @@ public class Image {
                         (float)alpha.doubleValue()));
             }
         }
+    }
 
+    public byte[] toByteArray() throws IOException {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ImageIO.write(buffImg,"png", bos);
+        return bos.toByteArray();
+    }
+
+    public void saveImage() throws IOException {
         File file = new File("img.png");
         ImageIO.write(buffImg, "png", file);
     }

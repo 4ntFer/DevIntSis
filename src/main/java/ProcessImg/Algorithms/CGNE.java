@@ -5,11 +5,10 @@ import org.jblas.DoubleMatrix;
 public class CGNE extends CGALG {
 
     //H é a matriz modelo e g é o vetor de sinal
-    public static DoubleMatrix getImage(DoubleMatrix H, DoubleMatrix g){
-
+    public static int algorithm(DoubleMatrix H, DoubleMatrix g, DoubleMatrix result){
+        int numberIteractions = 0;
         System.out.println("Executing CGNE!");
 
-        System.out.println("H is " + H.rows + " x " + H.columns + " and g is " + g.columns);
         DoubleMatrix f = DoubleMatrix.zeros(H.columns);
         DoubleMatrix r = g.sub(H.mmul(f));
         DoubleMatrix z = H.transpose().mmul(r);
@@ -39,17 +38,19 @@ public class CGNE extends CGALG {
 
             error = error(newR, r);
 
+            // Valor absoluto do erro
+            if(error < 0){
+                error *= -1;
+            }
+
             f = newF;
             r = newR;
             p = newP;
+            numberIteractions++;
         }while (error > 1e-4 );
 
-        System.out.println("final f is " + f.rows +" x "+ f.columns );
-
-        f.reshape(60, 60);
-
-
+        result.copy(f);
         System.out.println("CGNE Finalized!");
-        return f;
+        return numberIteractions;
     }
 }

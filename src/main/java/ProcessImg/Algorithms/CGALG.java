@@ -19,4 +19,5 @@ public class CGALG {
         //System.out.println("Error: " + newR_norm.doubleValue() + " - " + R_norm.doubleValue() + " = " + error);
         return error;
     }
+
 }
